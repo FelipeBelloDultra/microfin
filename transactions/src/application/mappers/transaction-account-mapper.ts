@@ -3,7 +3,7 @@ import { TransactionAccount } from "../../domain/entity/transaction-account";
 
 type DatabaseAccount = Omit<PrismaAccount, "created_at" | "updated_at">;
 
-export class AccountMapper {
+export class TransactionAccountMapper {
   public static toPersistence(account: TransactionAccount): DatabaseAccount {
     return {
       amount: account.amount,

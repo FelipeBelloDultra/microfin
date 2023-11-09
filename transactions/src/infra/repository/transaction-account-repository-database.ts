@@ -1,4 +1,4 @@
-import { AccountMapper } from "../../application/mappers/transaction-account-mapper";
+import { TransactionAccountMapper } from "../../application/mappers/transaction-account-mapper";
 import { TransactionAccountRepository } from "../../application/repository/transaction-account-repository";
 import { TransactionAccount } from "../../domain/entity/transaction-account";
 import { Database } from "../database/database";
@@ -9,7 +9,8 @@ export class TransactionAccountRepositoryDatabase
   constructor(private readonly database: Database) {}
 
   public async create(transactionAccount: TransactionAccount) {
-    const toPersistence = AccountMapper.toPersistence(transactionAccount);
+    const toPersistence =
+      TransactionAccountMapper.toPersistence(transactionAccount);
 
     await this.database.client.account.create({
       data: toPersistence,
@@ -21,7 +22,7 @@ export class TransactionAccountRepositoryDatabase
       where: { external_account_id: accountId },
     });
 
-    if (finded) return AccountMapper.toDomain(finded);
+    if (finded) return TransactionAccountMapper.toDomain(finded);
 
     return undefined;
   }
