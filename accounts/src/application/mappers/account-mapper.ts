@@ -10,7 +10,7 @@ export class AccountMapper {
       amount: MoneyService.toCents(account.amount),
       code: account.code || null,
       email: account.email,
-      id: `account:${account.id}`,
+      id: account.id,
       name: account.name,
       password: account.password,
     };

@@ -14,7 +14,7 @@ import { AccountRepositoryDatabase } from "./infra/repository/account-repository
 
   const useCase = new CreateAccount(repository, message);
   await useCase.execute({
-    email: "test@test.com",
+    email: "testea@test.com",
     name: "name example",
     password: "my-password",
   });
