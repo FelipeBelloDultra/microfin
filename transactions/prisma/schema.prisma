@@ -32,16 +32,11 @@ enum TransactionStatus {
   REFUSED
 }
 
-enum TransactionType {
-  TRANSFER
-  DEPOSIT
-}
-
 model Transaction {
-  id     String            @id @unique
-  value  Int
-  type   TransactionType
-  status TransactionStatus
+  id          String            @id @unique
+  value       Int
+  observation String?
+  status      TransactionStatus
 
   transaction_to_account    Account @relation("to_account", fields: [transaction_to_account_id], references: [external_account_id])
   transaction_to_account_id String

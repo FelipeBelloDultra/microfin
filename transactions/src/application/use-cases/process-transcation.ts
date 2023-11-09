@@ -36,6 +36,14 @@ export class ProcessTransaction {
     );
     if (!transaction) throw new Error("Could not find transaction");
 
+    if (fromAccount.amount < value) {
+      transaction.refuse();
+      transaction.changeObservation("Insufficient balance in origin account");
+      await this.transactionRepository.update(transaction);
+
+      return;
+    }
+
     const toAccountInstance = TransactionAccount.create(
       {
         amount: toAccount.amount,
@@ -62,6 +70,7 @@ export class ProcessTransaction {
     await this.transactionAccountRepository.update(fromAccountInstance);
 
     transaction.complete();
+    transaction.changeObservation("Transaction completed successfully");
     await this.transactionRepository.update(transaction);
 
     await this.messageProvider.sendMessage(

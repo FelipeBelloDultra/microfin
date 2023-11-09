@@ -30,9 +30,8 @@ import { TransactionRepositoryDatabase } from "./infra/repository/transaction-re
   );
 
   await createT.execute({
-    accountFrom: "account:9134e341-d43b-465a-9e85-3cd6f48002be",
-    accountTo: "account:fe3a311c-ad10-47b3-be74-01b85c17c00d",
-    type: "TRANSFER",
+    accountFrom: "account:72ee5db5-c8c6-4cec-b5be-318c60dff705",
+    accountTo: "account:bc4634f1-6d15-4ac8-b794-b1da66b9a677",
     value: 120,
   });
 })();

@@ -1,8 +1,5 @@
 -- CreateEnum
-CREATE TYPE "TransactionType" AS ENUM ('PENDING', 'COMPLETED', 'REFUSED');
-
--- CreateEnum
-CREATE TYPE "TransactionStatus" AS ENUM ('TRANSFER', 'DEPOSIT');
+CREATE TYPE "TransactionStatus" AS ENUM ('PENDING', 'COMPLETED', 'REFUSED');
 
 -- CreateTable
 CREATE TABLE "accounts" (
@@ -21,10 +18,10 @@ CREATE TABLE "accounts" (
 CREATE TABLE "transactions" (
     "id" TEXT NOT NULL,
     "value" INTEGER NOT NULL,
-    "type" "TransactionType" NOT NULL,
+    "observation" TEXT,
     "status" "TransactionStatus" NOT NULL,
-    "origin_account_id" TEXT NOT NULL,
-    "from_account_id" TEXT NOT NULL,
+    "transaction_to_account_id" TEXT NOT NULL,
+    "transaction_from_account_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -47,7 +44,7 @@ CREATE UNIQUE INDEX "accounts_code_key" ON "accounts"("code");
 CREATE UNIQUE INDEX "transactions_id_key" ON "transactions"("id");
 
 -- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transactions_origin_account_id_fkey" FOREIGN KEY ("origin_account_id") REFERENCES "accounts"("external_account_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "transactions" ADD CONSTRAINT "transactions_transaction_to_account_id_fkey" FOREIGN KEY ("transaction_to_account_id") REFERENCES "accounts"("external_account_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transactions_from_account_id_fkey" FOREIGN KEY ("from_account_id") REFERENCES "accounts"("external_account_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "transactions" ADD CONSTRAINT "transactions_transaction_from_account_id_fkey" FOREIGN KEY ("transaction_from_account_id") REFERENCES "accounts"("external_account_id") ON DELETE RESTRICT ON UPDATE CASCADE;

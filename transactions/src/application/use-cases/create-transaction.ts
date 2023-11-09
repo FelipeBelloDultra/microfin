@@ -6,7 +6,6 @@ import { TransactionRepository } from "../repository/transaction-repository";
 interface Input {
   accountTo: string;
   accountFrom: string;
-  type: "TRANSFER" | "DEPOSIT";
   value: number;
 }
 
@@ -17,7 +16,7 @@ export class CreateTransaction {
     private readonly messageProvider: MessageProvider
   ) {}
 
-  public async execute({ accountFrom, accountTo, type, value }: Input) {
+  public async execute({ accountFrom, accountTo, value }: Input) {
     if (accountTo === accountFrom)
       throw new Error("Choose a different account");
 
@@ -37,7 +36,6 @@ export class CreateTransaction {
       accountFrom,
       accountTo,
       status: "PENDING",
-      type,
       value,
     });
 

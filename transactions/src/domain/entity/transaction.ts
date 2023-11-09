@@ -2,18 +2,18 @@ import { Entity } from "../../core/domain/entity";
 
 interface TransactionProps {
   value: number;
-  type: "TRANSFER" | "DEPOSIT";
   status: "PENDING" | "COMPLETED" | "REFUSED";
   accountTo: string;
   accountFrom: string;
+  observation?: string;
 }
 
 export class Transaction extends Entity<TransactionProps> {
   public get value() {
     return this.props.value;
   }
-  public get type() {
-    return this.props.type;
+  public get observation() {
+    return this.props.observation;
   }
   public get status() {
     return this.props.status;
@@ -31,6 +31,14 @@ export class Transaction extends Entity<TransactionProps> {
 
   public complete() {
     this.props.status = "COMPLETED";
+  }
+
+  public refuse() {
+    this.props.status = "REFUSED";
+  }
+
+  public changeObservation(text: string) {
+    this.props.observation = text;
   }
 
   public static create(props: TransactionProps, id?: string) {
