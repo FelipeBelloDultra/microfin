@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  transaction-service:
+    build: .
+    volumes:
+      - ./transactions/:/home/node/app
+    ports:
+      - 3000:3000
+      - 5000:5555
+    networks:
+      - microfin-net
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  account-service:
+    build: .
+    volumes:
+      - ./accounts/:/home/node/app
+    ports:
+      - 3001:3000
+      - 5001:5555
+    networks:
+      - microfin-net
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  postgres:
+    image: "postgres:16-alpine"
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - microfin-net
+
+  rabbitmq:
+    image: rabbitmq:3.12.7-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - microfin-net
+
+networks:
+  microfin-net:
+    driver: bridge
+
+volumes:
+  pg_data:

@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf ./dist && npx tsc -p tsconfig.build.json"
+    "build": "rm -rf ./dist && npx tsc -p tsconfig.build.json",
+    "database:migrate:dev": "prisma migrate dev",
+    "database:preview": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,8 @@
     "prisma": "^5.5.2",
     "tsx": "^4.0.0",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.5.2"
   }
 }
