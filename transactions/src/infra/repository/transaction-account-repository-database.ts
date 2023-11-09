@@ -15,4 +15,14 @@ export class TransactionAccountRepositoryDatabase
       data: toPersistence,
     });
   }
+
+  public async findByExternalAccountId(accountId: string) {
+    const finded = await this.database.client.account.findUnique({
+      where: { external_account_id: accountId },
+    });
+
+    if (finded) return AccountMapper.toDomain(finded);
+
+    return undefined;
+  }
 }

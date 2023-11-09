@@ -10,7 +10,7 @@ export class AccountMapper {
       external_account_id: account.externalAccountId,
       code: account.code || null,
       email: account.email,
-      id: `transaction:${account.id}`,
+      id: account.id,
     };
   }
 

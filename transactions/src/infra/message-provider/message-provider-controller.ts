@@ -8,6 +8,7 @@ export class MessageProviderController {
     private readonly transactionAccountRepository: TransactionAccountRepository
   ) {
     this.createTransactionAccount();
+    this.processTransaction();
   }
 
   public async createTransactionAccount() {
@@ -20,6 +21,18 @@ export class MessageProviderController {
       code?: string;
       externalAccountId: string;
       amount: number;
-    }>("account.created", createTransactionAccount.execute);
+    }>(
+      "account.created",
+      createTransactionAccount.execute.bind(createTransactionAccount)
+    );
+  }
+
+  public async processTransaction() {
+    this.messageProvider.onMessage(
+      "transaction.process-created-transaction",
+      async (data) => {
+        console.log(data);
+      }
+    );
   }
 }

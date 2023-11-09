@@ -10,6 +10,6 @@ export abstract class Entity<T> {
 
   constructor(props: T, id?: string) {
     this.props = props;
-    this._id = id || randomUUID();
+    this._id = `transaction:${id || randomUUID()}`;
   }
 }
