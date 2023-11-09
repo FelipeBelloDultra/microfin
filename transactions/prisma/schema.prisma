@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                  String  @id @unique
+  external_account_id String  @unique
+  email               String  @unique
+  code                String? @unique
+  amount              Int
+
+  transactions_origin Transaction[] @relation("origin_account")
+  transactions_from   Transaction[] @relation("from_account")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("accounts")
+}
+
+enum TransactionType {
+  PENDING
+  COMPLETED
+  REFUSED
+}
+
+enum TransactionStatus {
+  TRANSFER
+  DEPOSIT
+}
+
+model Transaction {
+  id     String            @id @unique
+  value  Int
+  type   TransactionType
+  status TransactionStatus
+
+  origin_account    Account @relation("origin_account", fields: [origin_account_id], references: [external_account_id])
+  origin_account_id String
+
+  from_account    Account @relation("from_account", fields: [from_account_id], references: [external_account_id])
+  from_account_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("transactions")
+}

@@ -1,0 +1,19 @@
+{
+  "name": "transactions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf ./dist && npx tsc -p tsconfig.build.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.9.0",
+    "prisma": "^5.5.2",
+    "tsx": "^4.0.0",
+    "typescript": "^5.2.2"
+  }
+}
