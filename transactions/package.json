@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./dist && npx tsc -p tsconfig.build.json",
+    "dev:watch": "tsx --env-file=.env --watch src/index.ts",
     "database:migrate:dev": "prisma migrate dev",
     "database:preview": "prisma studio"
   },

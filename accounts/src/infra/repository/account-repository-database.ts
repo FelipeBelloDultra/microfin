@@ -3,7 +3,7 @@ import { AccountRepository } from "../../application/repository/account-reposito
 import { Account } from "../../domain/entity/account";
 import { Database } from "../database/database";
 
-export class AccountRepositoryDatabse implements AccountRepository {
+export class AccountRepositoryDatabase implements AccountRepository {
   constructor(private readonly database: Database) {}
 
   public async create(account: Account) {
