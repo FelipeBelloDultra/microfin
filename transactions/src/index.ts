@@ -17,7 +17,11 @@ import { TransactionRepositoryDatabase } from "./infra/repository/transaction-re
   const messageProvider = new RabbitmqMessageProviderAdapter();
   await messageProvider.connect();
 
-  new MessageProviderController(messageProvider, transactionAccountRepository);
+  new MessageProviderController(
+    messageProvider,
+    transactionAccountRepository,
+    transactionRepository
+  );
 
   const createT = new CreateTransaction(
     transactionRepository,
@@ -26,9 +30,9 @@ import { TransactionRepositoryDatabase } from "./infra/repository/transaction-re
   );
 
   await createT.execute({
-    accountFrom: "account:b333f0e3-9494-4995-a74f-f848fe310e5a",
-    accountTo: "account:746da863-9d0b-419d-b9ac-8e15283066f8",
+    accountFrom: "account:9134e341-d43b-465a-9e85-3cd6f48002be",
+    accountTo: "account:fe3a311c-ad10-47b3-be74-01b85c17c00d",
     type: "TRANSFER",
-    value: 20,
+    value: 120,
   });
 })();

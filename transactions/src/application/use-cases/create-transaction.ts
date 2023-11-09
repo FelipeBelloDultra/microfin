@@ -22,11 +22,15 @@ export class CreateTransaction {
       throw new Error("Choose a different account");
 
     const findedAccountTo =
-      this.transactionAccountRepository.findByExternalAccountId(accountTo);
+      await this.transactionAccountRepository.findByExternalAccountId(
+        accountTo
+      );
     if (!findedAccountTo) throw new Error("Choose a different account");
 
     const findedAccountFrom =
-      this.transactionAccountRepository.findByExternalAccountId(accountFrom);
+      await this.transactionAccountRepository.findByExternalAccountId(
+        accountFrom
+      );
     if (!findedAccountFrom) throw new Error("Choose a different account");
 
     const transaction = Transaction.create({
@@ -39,12 +43,26 @@ export class CreateTransaction {
 
     await this.transactionRepository.create(transaction);
 
+    const fromAccount = {
+      id: findedAccountFrom.id,
+      amount: findedAccountFrom.amount,
+      code: findedAccountFrom.code,
+      externalAccountId: findedAccountFrom.externalAccountId,
+      email: findedAccountFrom.email,
+    };
+    const toAccount = {
+      id: findedAccountTo.id,
+      amount: findedAccountTo.amount,
+      code: findedAccountTo.code,
+      externalAccountId: findedAccountTo.externalAccountId,
+      email: findedAccountTo.email,
+    };
+
     const toProcessTransactionPayload = Buffer.from(
       JSON.stringify({
-        accountFrom: transaction.accountFrom,
-        accountTo: transaction.accountTo,
-        status: transaction.status,
-        type: transaction.type,
+        fromAccount,
+        toAccount,
+        transactionId: transaction.id,
         value: transaction.value,
       })
     );

@@ -25,6 +25,10 @@ export class TransactionAccount extends Entity<AccountProps> {
     super(props, id);
   }
 
+  public updateAmountValue(newAmount: number) {
+    this.props.amount = newAmount;
+  }
+
   public static create(props: AccountProps, id?: string) {
     return new TransactionAccount(
       {

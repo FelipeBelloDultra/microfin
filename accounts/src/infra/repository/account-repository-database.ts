@@ -25,4 +25,25 @@ export class AccountRepositoryDatabase implements AccountRepository {
 
     return undefined;
   }
+
+  public async findById(id: string) {
+    const finded = await this.database.client.account.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (finded) return AccountMapper.toDomain(finded);
+
+    return undefined;
+  }
+
+  public async update(account: Account) {
+    await this.database.client.account.update({
+      where: {
+        id: account.id,
+      },
+      data: AccountMapper.toPersistence(account),
+    });
+  }
 }

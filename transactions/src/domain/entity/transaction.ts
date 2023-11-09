@@ -29,6 +29,10 @@ export class Transaction extends Entity<TransactionProps> {
     super(props, id);
   }
 
+  public complete() {
+    this.props.status = "COMPLETED";
+  }
+
   public static create(props: TransactionProps, id?: string) {
     return new Transaction(props, id);
   }

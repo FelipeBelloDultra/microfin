@@ -5,4 +5,5 @@ export interface TransactionAccountRepository {
   findByExternalAccountId: (
     accountId: string
   ) => Promise<TransactionAccount | undefined>;
+  update: (account: TransactionAccount) => Promise<void>;
 }

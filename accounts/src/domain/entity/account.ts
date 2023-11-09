@@ -47,6 +47,10 @@ export class Account extends Entity<AccountProps> {
     return true;
   }
 
+  public updateAmountValue(newAmount: number) {
+    this.props.amount = newAmount;
+  }
+
   public static create(props: AccountProps, id?: string) {
     const accountIsValid = this.isValid(props);
 

@@ -26,4 +26,13 @@ export class TransactionAccountRepositoryDatabase
 
     return undefined;
   }
+
+  public async update(account: TransactionAccount) {
+    await this.database.client.account.update({
+      where: {
+        id: account.id,
+      },
+      data: TransactionAccountMapper.toPersistence(account),
+    });
+  }
 }

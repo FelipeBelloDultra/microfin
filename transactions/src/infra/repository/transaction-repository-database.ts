@@ -13,4 +13,25 @@ export class TransactionRepositoryDatabase implements TransactionRepository {
       data: toPersistence,
     });
   }
+
+  public async findById(id: string) {
+    const finded = await this.database.client.transaction.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (finded) return TransactionMapper.toDomain(finded);
+
+    return undefined;
+  }
+
+  public async update(transaction: Transaction) {
+    await this.database.client.transaction.update({
+      where: {
+        id: transaction.id,
+      },
+      data: TransactionMapper.toPersistence(transaction),
+    });
+  }
 }
