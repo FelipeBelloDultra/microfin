@@ -13,12 +13,14 @@
   "license": "ISC",
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
+    "@types/amqplib": "^0.10.4",
     "@types/node": "^20.9.0",
     "prisma": "^5.5.2",
     "tsx": "^4.0.0",
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@prisma/client": "^5.5.2"
+    "@prisma/client": "^5.5.2",
+    "amqplib": "^0.10.3"
   }
 }
