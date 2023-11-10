@@ -3,6 +3,7 @@ import { TransactionAccountRepository } from "../../application/repository/trans
 import { TransactionRepository } from "../../application/repository/transaction-repository";
 import { CreateTransactionAccount } from "../../application/use-cases/create-transaction-account";
 import { ProcessTransaction } from "../../application/use-cases/process-transcation";
+import { UpdateTransactionAccountAmount } from "../../application/use-cases/update-transaction-account-amount";
 
 export class MessageProviderController {
   constructor(
@@ -12,6 +13,7 @@ export class MessageProviderController {
   ) {
     this.createTransactionAccount();
     this.processTransaction();
+    this.updateTransactionAccountAmount();
   }
 
   public createTransactionAccount() {
@@ -40,6 +42,19 @@ export class MessageProviderController {
     this.messageProvider.onMessage(
       "transaction.process-created-transaction",
       processTransaction.execute.bind(processTransaction)
+    );
+  }
+
+  public updateTransactionAccountAmount() {
+    const updateTransactionAccountAmount = new UpdateTransactionAccountAmount(
+      this.transactionAccountRepository
+    );
+
+    this.messageProvider.onMessage(
+      "accounts.updated-amount",
+      updateTransactionAccountAmount.execute.bind(
+        updateTransactionAccountAmount
+      )
     );
   }
 }

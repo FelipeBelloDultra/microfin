@@ -48,6 +48,8 @@ export class Account extends Entity<AccountProps> {
   }
 
   public updateAmountValue(newAmount: number) {
+    if (newAmount < 0) throw new Error("amount must be greater than zero");
+
     this.props.amount = newAmount;
   }
 
