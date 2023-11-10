@@ -10,7 +10,7 @@ interface Input {
   toAccount: AccountData;
 }
 
-export class UpdateAccountBeforeCompleteTransaction {
+export class UpdateTransactionAccounts {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   public async execute({ fromAccount, toAccount }: Input) {
