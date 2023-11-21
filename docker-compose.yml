@@ -13,6 +13,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+      - redis
 
   account-service:
     build: .
@@ -26,6 +27,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+      - redis
 
   postgres:
     image: "postgres:16-alpine"
@@ -48,6 +50,14 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - microfin-net
+
+  redis:
+    image: redis:7.2.3-alpine
+    restart: always
+    ports:
+      - "6379:6379"
     networks:
       - microfin-net
 
