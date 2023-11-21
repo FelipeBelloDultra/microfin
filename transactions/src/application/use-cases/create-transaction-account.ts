@@ -1,4 +1,5 @@
 import { TransactionAccount } from "../../domain/entity/transaction-account";
+import { RepositoryFactory } from "../factory/repository-factory";
 import { TransactionAccountRepository } from "../repository/transaction-account-repository";
 
 interface Input {
@@ -8,9 +9,12 @@ interface Input {
 }
 
 export class CreateTransactionAccount {
-  constructor(
-    private readonly transactionAccountRepository: TransactionAccountRepository
-  ) {}
+  private readonly transactionAccountRepository: TransactionAccountRepository;
+
+  constructor(repositoryFactory: RepositoryFactory) {
+    this.transactionAccountRepository =
+      repositoryFactory.createTransactionAccountRepository();
+  }
 
   public async execute({ email, amount, externalAccountId }: Input) {
     const account = TransactionAccount.create({

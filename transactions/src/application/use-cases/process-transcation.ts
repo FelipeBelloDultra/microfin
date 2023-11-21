@@ -1,5 +1,6 @@
 import { TransactionAccount } from "../../domain/entity/transaction-account";
-import { MessageProvider } from "../providers/message-provider";
+import { MessageProviderFactory } from "../factory/message-provider-factory";
+import { RepositoryFactory } from "../factory/repository-factory";
 import { TransactionAccountRepository } from "../repository/transaction-account-repository";
 import { TransactionRepository } from "../repository/transaction-repository";
 
@@ -18,11 +19,18 @@ interface Input {
 }
 
 export class ProcessTransaction {
+  private readonly transactionAccountRepository: TransactionAccountRepository;
+  private readonly transactionRepository: TransactionRepository;
+
   constructor(
-    private readonly transactionRepository: TransactionRepository,
-    private readonly transactionAccountRepository: TransactionAccountRepository,
-    private readonly messageProvider: MessageProvider
-  ) {}
+    repositoryFactory: RepositoryFactory,
+    private readonly messageProviderFactory: MessageProviderFactory
+  ) {
+    this.transactionAccountRepository =
+      repositoryFactory.createTransactionAccountRepository();
+    this.transactionRepository =
+      repositoryFactory.createTransactionRepository();
+  }
 
   public async execute({
     fromAccount,
@@ -61,29 +69,30 @@ export class ProcessTransaction {
     );
 
     toAccountInstance.updateAmountValue(toAccount.amount + value);
-    await this.transactionAccountRepository.update(toAccountInstance);
 
     fromAccountInstance.updateAmountValue(fromAccount.amount - value);
-    await this.transactionAccountRepository.update(fromAccountInstance);
+
+    await Promise.all([
+      this.transactionAccountRepository.update(toAccountInstance),
+      this.transactionAccountRepository.update(fromAccountInstance),
+    ]);
 
     transaction.complete();
     transaction.changeObservation("Transaction completed successfully");
+
     await this.transactionRepository.update(transaction);
 
-    await this.messageProvider.sendMessage(
-      "transaction.complete-transaction",
-      Buffer.from(
-        JSON.stringify({
-          fromAccount: {
-            id: fromAccountInstance.externalAccountId,
-            newValue: fromAccountInstance.amount,
-          },
-          toAccount: {
-            id: toAccountInstance.externalAccountId,
-            newValue: toAccountInstance.amount,
-          },
-        })
-      )
+    await this.messageProviderFactory.emitTransactionCompleteTransactionMessage(
+      {
+        from: {
+          externalId: fromAccountInstance.externalAccountId,
+          newAmount: fromAccountInstance.amount,
+        },
+        to: {
+          externalId: toAccountInstance.externalAccountId,
+          newAmount: toAccountInstance.amount,
+        },
+      }
     );
   }
 }

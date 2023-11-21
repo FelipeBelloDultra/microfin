@@ -1,3 +1,4 @@
+import { RepositoryFactory } from "../factory/repository-factory";
 import { TransactionAccountRepository } from "../repository/transaction-account-repository";
 
 interface Input {
@@ -6,9 +7,12 @@ interface Input {
 }
 
 export class UpdateTransactionAccountAmount {
-  constructor(
-    private readonly transactionAccountRepository: TransactionAccountRepository
-  ) {}
+  private readonly transactionAccountRepository: TransactionAccountRepository;
+
+  constructor(repositoryFactory: RepositoryFactory) {
+    this.transactionAccountRepository =
+      repositoryFactory.createTransactionAccountRepository();
+  }
 
   public async execute({ accountId, newAccountAmount }: Input) {
     const transactionAccount =

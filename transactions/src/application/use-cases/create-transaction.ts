@@ -1,5 +1,6 @@
 import { Transaction } from "../../domain/entity/transaction";
-import { MessageProvider } from "../providers/message-provider";
+import { MessageProviderFactory } from "../factory/message-provider-factory";
+import { RepositoryFactory } from "../factory/repository-factory";
 import { TransactionAccountRepository } from "../repository/transaction-account-repository";
 import { TransactionRepository } from "../repository/transaction-repository";
 
@@ -10,27 +11,48 @@ interface Input {
 }
 
 export class CreateTransaction {
+  private readonly transactionAccountRepository: TransactionAccountRepository;
+  private readonly transactionRepository: TransactionRepository;
+
   constructor(
-    private readonly transactionRepository: TransactionRepository,
-    private readonly transactionAccountRepository: TransactionAccountRepository,
-    private readonly messageProvider: MessageProvider
-  ) {}
+    repositoryFactory: RepositoryFactory,
+    private readonly messageProviderFactory: MessageProviderFactory
+  ) {
+    this.transactionAccountRepository =
+      repositoryFactory.createTransactionAccountRepository();
+    this.transactionRepository =
+      repositoryFactory.createTransactionRepository();
+  }
 
   public async execute({ accountFrom, accountTo, value }: Input) {
-    if (accountTo === accountFrom)
-      throw new Error("Choose a different account");
-
-    const findedAccountTo =
-      await this.transactionAccountRepository.findByExternalAccountId(
-        accountTo
+    if (accountTo === accountFrom) {
+      return await this.transactionRepository.create(
+        Transaction.create({
+          accountFrom,
+          accountTo,
+          status: "REFUSED",
+          value,
+          observation: "Unable to create a transaction for your account",
+        })
       );
-    if (!findedAccountTo) throw new Error("Choose a different account");
+    }
 
-    const findedAccountFrom =
-      await this.transactionAccountRepository.findByExternalAccountId(
-        accountFrom
+    const [findedAccountTo, findedAccountFrom] = await Promise.all([
+      this.transactionAccountRepository.findByExternalAccountId(accountTo),
+      this.transactionAccountRepository.findByExternalAccountId(accountFrom),
+    ]);
+
+    if (!findedAccountTo || !findedAccountFrom) {
+      return await this.transactionRepository.create(
+        Transaction.create({
+          accountFrom,
+          accountTo,
+          status: "REFUSED",
+          value,
+          observation: "Invalid account",
+        })
       );
-    if (!findedAccountFrom) throw new Error("Choose a different account");
+    }
 
     const transaction = Transaction.create({
       accountFrom,
@@ -41,31 +63,25 @@ export class CreateTransaction {
 
     await this.transactionRepository.create(transaction);
 
-    const fromAccount = {
-      id: findedAccountFrom.id,
-      amount: findedAccountFrom.amount,
-      externalAccountId: findedAccountFrom.externalAccountId,
-      email: findedAccountFrom.email,
-    };
-    const toAccount = {
-      id: findedAccountTo.id,
-      amount: findedAccountTo.amount,
-      externalAccountId: findedAccountTo.externalAccountId,
-      email: findedAccountTo.email,
-    };
-
-    const toProcessTransactionPayload = Buffer.from(
-      JSON.stringify({
-        fromAccount,
-        toAccount,
-        transactionId: transaction.id,
-        value: transaction.value,
-      })
-    );
-
-    await this.messageProvider.sendMessage(
-      "transaction.process-created-transaction",
-      toProcessTransactionPayload
+    await this.messageProviderFactory.emitTransactionProcessCreatedTransactionMessage(
+      {
+        from: {
+          id: findedAccountFrom.id,
+          amount: findedAccountFrom.amount,
+          externalAccountId: findedAccountFrom.externalAccountId,
+          email: findedAccountFrom.email,
+        },
+        to: {
+          id: findedAccountTo.id,
+          amount: findedAccountTo.amount,
+          externalAccountId: findedAccountTo.externalAccountId,
+          email: findedAccountTo.email,
+        },
+        transaction: {
+          id: transaction.id,
+          value: transaction.value,
+        },
+      }
     );
   }
 }
