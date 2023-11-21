@@ -11,7 +11,7 @@ export class Router {
   private updateAccountAmount() {
     const updateAccountAmount = this.useCaseFactory.updateAccountAmount();
 
-    this.router.post("/account/:id/amount", async (req, res) => {
+    this.router.post("/account/amount", async (req, res) => {
       const { accountId, amount } = req.body;
 
       await updateAccountAmount.execute({

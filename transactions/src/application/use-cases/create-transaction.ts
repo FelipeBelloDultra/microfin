@@ -43,15 +43,7 @@ export class CreateTransaction {
     ]);
 
     if (!findedAccountTo || !findedAccountFrom) {
-      return await this.transactionRepository.create(
-        Transaction.create({
-          accountFrom,
-          accountTo,
-          status: "REFUSED",
-          value,
-          observation: "Invalid account",
-        })
-      );
+      return;
     }
 
     const transaction = Transaction.create({
