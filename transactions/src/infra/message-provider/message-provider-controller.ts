@@ -1,15 +1,10 @@
-import { MessageProviderFactory } from "../../application/factory/message-provider-factory";
 import { MessageProvider } from "../../application/providers/message-provider";
-import { CreateTransactionAccount } from "../../application/use-cases/create-transaction-account";
-import { ProcessTransaction } from "../../application/use-cases/process-transcation";
-import { UpdateTransactionAccountAmount } from "../../application/use-cases/update-transaction-account-amount";
-import { DatabaseRepositoryFactory } from "../factory/database-repository-factory";
+import { UseCaseFactory } from "../factory/use-case-factory";
 
 export class MessageProviderController {
   constructor(
     private readonly messageProvider: MessageProvider,
-    private readonly repositoryFactory: DatabaseRepositoryFactory,
-    private readonly messageProviderFactory: MessageProviderFactory
+    private readonly useCaseFactory: UseCaseFactory
   ) {
     this.createTransactionAccount();
     this.processTransaction();
@@ -17,9 +12,8 @@ export class MessageProviderController {
   }
 
   public createTransactionAccount() {
-    const createTransactionAccount = new CreateTransactionAccount(
-      this.repositoryFactory
-    );
+    const createTransactionAccount =
+      this.useCaseFactory.createTransactionAccount();
 
     this.messageProvider.onMessage<{
       email: string;
@@ -32,10 +26,7 @@ export class MessageProviderController {
   }
 
   public processTransaction() {
-    const processTransaction = new ProcessTransaction(
-      this.repositoryFactory,
-      this.messageProviderFactory
-    );
+    const processTransaction = this.useCaseFactory.processTransaction();
 
     this.messageProvider.onMessage(
       "transaction.process-created-transaction",
@@ -44,9 +35,8 @@ export class MessageProviderController {
   }
 
   public updateTransactionAccountAmount() {
-    const updateTransactionAccountAmount = new UpdateTransactionAccountAmount(
-      this.repositoryFactory
-    );
+    const updateTransactionAccountAmount =
+      this.useCaseFactory.updateTransactionAccountAmount();
 
     this.messageProvider.onMessage(
       "accounts.updated-amount",
