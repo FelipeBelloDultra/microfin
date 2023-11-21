@@ -1,18 +1,18 @@
 import { MessageProvider } from "../../application/providers/message-provider";
-import { AccountRepository } from "../../application/repository/account-repository";
 import { UpdateTransactionAccounts } from "../../application/use-cases/update-transaction-accounts";
+import { DatabaseRepositoryFactory } from "../factory/database-repository-factory";
 
 export class MessageProviderController {
   constructor(
     private readonly messageProvider: MessageProvider,
-    private readonly accountRepository: AccountRepository
+    private readonly repositoryFactory: DatabaseRepositoryFactory
   ) {
     this.updateTransactionAccounts();
   }
 
   public updateTransactionAccounts() {
     const updateTransactionAccounts = new UpdateTransactionAccounts(
-      this.accountRepository
+      this.repositoryFactory
     );
 
     this.messageProvider.onMessage(

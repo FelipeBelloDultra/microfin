@@ -1,15 +1,15 @@
+import { MessageProviderFactory } from "../../application/factory/message-provider-factory";
 import { MessageProvider } from "../../application/providers/message-provider";
-import { TransactionAccountRepository } from "../../application/repository/transaction-account-repository";
-import { TransactionRepository } from "../../application/repository/transaction-repository";
 import { CreateTransactionAccount } from "../../application/use-cases/create-transaction-account";
 import { ProcessTransaction } from "../../application/use-cases/process-transcation";
 import { UpdateTransactionAccountAmount } from "../../application/use-cases/update-transaction-account-amount";
+import { DatabaseRepositoryFactory } from "../factory/database-repository-factory";
 
 export class MessageProviderController {
   constructor(
     private readonly messageProvider: MessageProvider,
-    private readonly transactionAccountRepository: TransactionAccountRepository,
-    private readonly transactionRepository: TransactionRepository
+    private readonly repositoryFactory: DatabaseRepositoryFactory,
+    private readonly messageProviderFactory: MessageProviderFactory
   ) {
     this.createTransactionAccount();
     this.processTransaction();
@@ -18,7 +18,7 @@ export class MessageProviderController {
 
   public createTransactionAccount() {
     const createTransactionAccount = new CreateTransactionAccount(
-      this.transactionAccountRepository
+      this.repositoryFactory
     );
 
     this.messageProvider.onMessage<{
@@ -33,9 +33,8 @@ export class MessageProviderController {
 
   public processTransaction() {
     const processTransaction = new ProcessTransaction(
-      this.transactionRepository,
-      this.transactionAccountRepository,
-      this.messageProvider
+      this.repositoryFactory,
+      this.messageProviderFactory
     );
 
     this.messageProvider.onMessage(
@@ -46,7 +45,7 @@ export class MessageProviderController {
 
   public updateTransactionAccountAmount() {
     const updateTransactionAccountAmount = new UpdateTransactionAccountAmount(
-      this.transactionAccountRepository
+      this.repositoryFactory
     );
 
     this.messageProvider.onMessage(
