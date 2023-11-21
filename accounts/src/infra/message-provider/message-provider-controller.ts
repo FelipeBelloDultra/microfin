@@ -1,19 +1,17 @@
 import { MessageProvider } from "../../application/providers/message-provider";
-import { UpdateTransactionAccounts } from "../../application/use-cases/update-transaction-accounts";
-import { DatabaseRepositoryFactory } from "../factory/database-repository-factory";
+import { UseCaseFactory } from "../factory/use-case-factory";
 
 export class MessageProviderController {
   constructor(
     private readonly messageProvider: MessageProvider,
-    private readonly repositoryFactory: DatabaseRepositoryFactory
+    private readonly useCaseFactory: UseCaseFactory
   ) {
     this.updateTransactionAccounts();
   }
 
   public updateTransactionAccounts() {
-    const updateTransactionAccounts = new UpdateTransactionAccounts(
-      this.repositoryFactory
-    );
+    const updateTransactionAccounts =
+      this.useCaseFactory.updateTransactionAccounts();
 
     this.messageProvider.onMessage(
       "transaction.complete-transaction",
