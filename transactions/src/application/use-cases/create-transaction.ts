@@ -44,14 +44,12 @@ export class CreateTransaction {
     const fromAccount = {
       id: findedAccountFrom.id,
       amount: findedAccountFrom.amount,
-      code: findedAccountFrom.code,
       externalAccountId: findedAccountFrom.externalAccountId,
       email: findedAccountFrom.email,
     };
     const toAccount = {
       id: findedAccountTo.id,
       amount: findedAccountTo.amount,
-      code: findedAccountTo.code,
       externalAccountId: findedAccountTo.externalAccountId,
       email: findedAccountTo.email,
     };

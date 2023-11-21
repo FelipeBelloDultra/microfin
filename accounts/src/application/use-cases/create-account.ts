@@ -30,7 +30,6 @@ export class CreateAccount {
     const sendMessageData = Buffer.from(
       JSON.stringify({
         externalAccountId: account.id,
-        code: account.code,
         email: account.email,
         amount: account.amount,
       })

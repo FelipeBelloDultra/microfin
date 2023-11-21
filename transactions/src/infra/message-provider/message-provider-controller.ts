@@ -23,7 +23,6 @@ export class MessageProviderController {
 
     this.messageProvider.onMessage<{
       email: string;
-      code?: string;
       externalAccountId: string;
       amount: number;
     }>(

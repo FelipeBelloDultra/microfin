@@ -3,7 +3,6 @@ import { TransactionAccountRepository } from "../repository/transaction-account-
 
 interface Input {
   email: string;
-  code?: string;
   externalAccountId: string;
   amount: number;
 }
@@ -13,10 +12,9 @@ export class CreateTransactionAccount {
     private readonly transactionAccountRepository: TransactionAccountRepository
   ) {}
 
-  public async execute({ email, amount, externalAccountId, code }: Input) {
+  public async execute({ email, amount, externalAccountId }: Input) {
     const account = TransactionAccount.create({
       externalAccountId,
-      code,
       email,
       amount,
     });

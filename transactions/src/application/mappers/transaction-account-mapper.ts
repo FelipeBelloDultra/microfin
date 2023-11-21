@@ -8,7 +8,6 @@ export class TransactionAccountMapper {
     return {
       amount: account.amount,
       external_account_id: account.externalAccountId,
-      code: account.code || null,
       email: account.email,
       id: account.id,
     };
@@ -20,7 +19,6 @@ export class TransactionAccountMapper {
         email: raw.email,
         amount: raw.amount,
         externalAccountId: raw.external_account_id,
-        code: raw.code || undefined,
       },
       raw.id
     );

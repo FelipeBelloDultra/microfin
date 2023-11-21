@@ -11,10 +11,9 @@ datasource db {
 }
 
 model Account {
-  id                  String  @id @unique
-  external_account_id String  @unique
-  email               String  @unique
-  code                String? @unique
+  id                  String @id @unique
+  external_account_id String @unique
+  email               String @unique
   amount              Int
 
   transactions_to   Transaction[] @relation("to_account")

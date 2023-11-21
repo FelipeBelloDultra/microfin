@@ -6,7 +6,6 @@ import { TransactionRepository } from "../repository/transaction-repository";
 interface Account {
   id: string;
   amount: number;
-  code?: string;
   externalAccountId: string;
   email: string;
 }
@@ -49,7 +48,6 @@ export class ProcessTransaction {
         amount: toAccount.amount,
         email: toAccount.email,
         externalAccountId: toAccount.externalAccountId,
-        code: toAccount.code,
       },
       toAccount.id
     );
@@ -58,7 +56,6 @@ export class ProcessTransaction {
         amount: fromAccount.amount,
         email: fromAccount.email,
         externalAccountId: fromAccount.externalAccountId,
-        code: fromAccount.code,
       },
       fromAccount.id
     );

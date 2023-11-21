@@ -7,7 +7,6 @@ export class AccountMapper {
   public static toPersistence(account: Account): DatabaseAccount {
     return {
       amount: account.amount,
-      code: account.code || null,
       email: account.email,
       id: account.id,
       name: account.name,
@@ -21,7 +20,6 @@ export class AccountMapper {
         email: raw.email,
         name: raw.name,
         password: raw.password,
-        code: raw.code || undefined,
         amount: raw.amount,
       },
       raw.id

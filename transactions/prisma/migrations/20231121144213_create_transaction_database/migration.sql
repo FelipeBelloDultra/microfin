@@ -6,7 +6,6 @@ CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
     "external_account_id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "code" TEXT,
     "amount" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -36,9 +35,6 @@ CREATE UNIQUE INDEX "accounts_external_account_id_key" ON "accounts"("external_a
 
 -- CreateIndex
 CREATE UNIQUE INDEX "accounts_email_key" ON "accounts"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "accounts_code_key" ON "accounts"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "transactions_id_key" ON "transactions"("id");
