@@ -1,5 +1,6 @@
 import { Account } from "../../domain/entity/account";
-import { MessageProvider } from "../providers/message-provider";
+import { MessageProviderFactory } from "../factory/message-provider-factory";
+import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
 
 interface Input {
@@ -9,10 +10,14 @@ interface Input {
 }
 
 export class CreateAccount {
+  private readonly accountRepository: AccountRepository;
+
   constructor(
-    private readonly accountRepository: AccountRepository,
-    private readonly messageProvider: MessageProvider
-  ) {}
+    repositoryFactory: RepositoryFactory,
+    private readonly messageProviderFactory: MessageProviderFactory
+  ) {
+    this.accountRepository = repositoryFactory.createAccountRepository();
+  }
 
   public async execute({ email, name, password }: Input) {
     const finded = await this.accountRepository.findByEmail(email);
@@ -27,14 +32,10 @@ export class CreateAccount {
 
     await this.accountRepository.create(account);
 
-    const sendMessageData = Buffer.from(
-      JSON.stringify({
-        externalAccountId: account.id,
-        email: account.email,
-        amount: account.amount,
-      })
-    );
-
-    await this.messageProvider.sendMessage("account.created", sendMessageData);
+    await this.messageProviderFactory.emitAccountCreatedMessage({
+      accountId: account.id,
+      amount: account.amount,
+      email: account.email,
+    });
   }
 }

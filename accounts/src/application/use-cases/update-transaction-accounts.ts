@@ -1,3 +1,4 @@
+import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
 
 interface AccountData {
@@ -11,20 +12,27 @@ interface Input {
 }
 
 export class UpdateTransactionAccounts {
-  constructor(private readonly accountRepository: AccountRepository) {}
+  private readonly accountRepository: AccountRepository;
+
+  constructor(repositoryFactory: RepositoryFactory) {
+    this.accountRepository = repositoryFactory.createAccountRepository();
+  }
 
   public async execute({ fromAccount, toAccount }: Input) {
-    const findedToAccount = await this.accountRepository.findById(toAccount.id);
-    if (!findedToAccount) throw new Error("Account not found");
-    findedToAccount.updateAmountValue(toAccount.newValue);
+    const [findedToAccount, findedFromAccount] = await Promise.all([
+      this.accountRepository.findById(toAccount.id),
+      this.accountRepository.findById(fromAccount.id),
+    ]);
 
-    const findedFromAccount = await this.accountRepository.findById(
-      fromAccount.id
-    );
-    if (!findedFromAccount) throw new Error("Account not found");
+    if (!findedToAccount || !findedFromAccount)
+      throw new Error("Account not found");
+
+    findedToAccount.updateAmountValue(toAccount.newValue);
     findedFromAccount.updateAmountValue(fromAccount.newValue);
 
-    await this.accountRepository.update(findedToAccount);
-    await this.accountRepository.update(findedFromAccount);
+    await Promise.all([
+      this.accountRepository.update(findedToAccount),
+      this.accountRepository.update(findedFromAccount),
+    ]);
   }
 }

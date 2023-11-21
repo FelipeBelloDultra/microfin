@@ -1,4 +1,5 @@
-import { MessageProvider } from "../providers/message-provider";
+import { MessageProviderFactory } from "../factory/message-provider-factory";
+import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
 
 interface Input {
@@ -7,10 +8,14 @@ interface Input {
 }
 
 export class UpdateAccountAmount {
+  private readonly accountRepository: AccountRepository;
+
   constructor(
-    private readonly accountRepository: AccountRepository,
-    private readonly messageProvider: MessageProvider
-  ) {}
+    repositoryFactory: RepositoryFactory,
+    private readonly messageProviderFactory: MessageProviderFactory
+  ) {
+    this.accountRepository = repositoryFactory.createAccountRepository();
+  }
 
   public async execute({ accountId, newAccountAmount }: Input) {
     const account = await this.accountRepository.findById(accountId);
@@ -19,14 +24,10 @@ export class UpdateAccountAmount {
     account.updateAmountValue(newAccountAmount);
 
     await this.accountRepository.update(account);
-    await this.messageProvider.sendMessage(
-      "accounts.updated-amount",
-      Buffer.from(
-        JSON.stringify({
-          accountId,
-          newAccountAmount,
-        })
-      )
-    );
+
+    await this.messageProviderFactory.emitAccountUpdateAmountMessage({
+      accountId,
+      newAmount: newAccountAmount,
+    });
   }
 }
