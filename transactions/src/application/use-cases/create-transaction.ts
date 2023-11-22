@@ -37,7 +37,9 @@ export class CreateTransaction {
           observation: "Unable to create a transaction for your account",
         })
       );
-      return await this.cacheProvider.invalidate("transactions:*");
+      return await this.cacheProvider.invalidate(
+        `transactions:${accountFrom}:*`
+      );
     }
 
     const [findedAccountTo, findedAccountFrom] = await Promise.all([
@@ -57,7 +59,7 @@ export class CreateTransaction {
     });
 
     await this.transactionRepository.create(transaction);
-    await this.cacheProvider.invalidate("transactions:*");
+    await this.cacheProvider.invalidate(`transactions:${accountFrom}:*`);
 
     await this.messageProviderFactory.emitTransactionProcessCreatedTransactionMessage(
       {
