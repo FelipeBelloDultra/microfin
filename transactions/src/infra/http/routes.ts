@@ -1,5 +1,8 @@
 import { Router as ExpressRouter } from "express";
+import { ensureAuthenticatedMiddleware } from "./middlewares/ensure-authenticated";
 import { UseCaseFactory } from "../factory/use-case-factory";
+import { ListTransactionsByAccountIdController } from "./controllers/list-transactions-by-account-id-controller";
+import { CreateTransactionController } from "./controllers/create-transaction-controller";
 
 export class Router {
   private readonly router: ExpressRouter;
@@ -9,39 +12,30 @@ export class Router {
   }
 
   private listTransactionsByAccountId() {
-    const listTransactionsByAccountId =
-      this.useCaseFactory.listTransactionsByAccountId();
+    const listTransactionsByAccountIdController =
+      new ListTransactionsByAccountIdController(
+        this.useCaseFactory.listTransactionsByAccountId()
+      );
 
-    this.router.get("/transactions", async (req, res) => {
-      const { accountId, type } = req.body;
-
-      const transactions = await listTransactionsByAccountId.execute({
-        accountId,
-        type,
-      });
-
-      return res
-        .json({
-          data: transactions,
-        })
-        .status(200);
-    });
+    this.router.get(
+      "/transactions",
+      ensureAuthenticatedMiddleware,
+      listTransactionsByAccountIdController.handle.bind(
+        listTransactionsByAccountIdController
+      )
+    );
   }
 
   private createTransaction() {
-    const createTransaction = this.useCaseFactory.createTransaction();
+    const createTransactionController = new CreateTransactionController(
+      this.useCaseFactory.createTransaction()
+    );
 
-    this.router.post("/transaction", async (req, res) => {
-      const { accountFrom, accountTo, value } = req.body;
-
-      await createTransaction.execute({
-        accountFrom,
-        accountTo,
-        value,
-      });
-
-      return res.status(201).end();
-    });
+    this.router.post(
+      "/transaction",
+      ensureAuthenticatedMiddleware,
+      createTransactionController.handle.bind(createTransactionController)
+    );
   }
 
   public all() {

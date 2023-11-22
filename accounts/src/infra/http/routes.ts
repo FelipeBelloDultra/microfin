@@ -1,6 +1,10 @@
 import { Router as ExpressRouter } from "express";
 import { ensureAuthenticatedMiddleware } from "./middlewares/ensure-authenticated";
 import { UseCaseFactory } from "../factory/use-case-factory";
+import { CreateAccountController } from "./controllers/create-account-controller";
+import { UpdateAccountAmountController } from "./controllers/update-account-amount-controller";
+import { ShowAuthenticatedController } from "./controllers/show-authenticated-controller";
+import { AuthenticateAccountController } from "./controllers/authenticate-account-controller";
 
 export class Router {
   private readonly router: ExpressRouter;
@@ -10,67 +14,49 @@ export class Router {
   }
 
   private showAuthenticated() {
-    const showAuthenticated = this.useCaseFactory.showAuthenticated();
+    const showAuthenticatedController = new ShowAuthenticatedController(
+      this.useCaseFactory.showAuthenticated()
+    );
 
     this.router.get(
       "/account/session/me",
       ensureAuthenticatedMiddleware,
-      async (req, res) => {
-        const { email, id } = req.user;
-
-        const result = await showAuthenticated.execute({ email, id });
-
-        return res.json({ data: result }).status(200);
-      }
+      showAuthenticatedController.handle.bind(showAuthenticatedController)
     );
   }
 
   private authenticateAccount() {
-    const authenticateAccount = this.useCaseFactory.authenticateAccount();
+    const authenticateAccountController = new AuthenticateAccountController(
+      this.useCaseFactory.authenticateAccount()
+    );
 
-    this.router.post("/account/session", async (req, res) => {
-      const { email, password } = req.body;
-
-      const result = await authenticateAccount.execute({ email, password });
-
-      return res.json({ data: result }).status(200);
-    });
+    this.router.post(
+      "/account/session",
+      authenticateAccountController.handle.bind(authenticateAccountController)
+    );
   }
 
   private updateAccountAmount() {
-    const updateAccountAmount = this.useCaseFactory.updateAccountAmount();
+    const updateAccountAmountController = new UpdateAccountAmountController(
+      this.useCaseFactory.updateAccountAmount()
+    );
 
     this.router.patch(
       "/account/amount",
       ensureAuthenticatedMiddleware,
-      async (req, res) => {
-        const { amount } = req.body;
-        const { id } = req.user;
-
-        await updateAccountAmount.execute({
-          accountId: id,
-          newAccountAmount: amount,
-        });
-
-        return res.status(201).end();
-      }
+      updateAccountAmountController.handle.bind(updateAccountAmountController)
     );
   }
 
   private createAccount() {
-    const createAccount = this.useCaseFactory.createAccount();
+    const createAccountController = new CreateAccountController(
+      this.useCaseFactory.createAccount()
+    );
 
-    this.router.post("/account", async (req, res) => {
-      const { email, name, password } = req.body;
-
-      await createAccount.execute({
-        email,
-        name,
-        password,
-      });
-
-      return res.status(201).end();
-    });
+    this.router.post(
+      "/account",
+      createAccountController.handle.bind(createAccountController)
+    );
   }
 
   public all() {
