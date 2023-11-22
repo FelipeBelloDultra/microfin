@@ -1,3 +1,4 @@
+import { hash, compare } from "bcryptjs";
 import { Entity } from "../../core/domain/entity";
 
 interface AccountProps {
@@ -41,13 +42,25 @@ export class Account extends Entity<AccountProps> {
     return true;
   }
 
+  public async comparePasswordHash(plainPassword: string): Promise<boolean> {
+    const passwordIsEqual = await compare(plainPassword, this.props.password);
+
+    return passwordIsEqual;
+  }
+
+  private static async encodePassword(password: string): Promise<string> {
+    const hashed = await hash(password, 8);
+
+    return hashed;
+  }
+
   public updateAmountValue(newAmount: number) {
     if (newAmount < 0) throw new Error("amount must be greater than zero");
 
     this.props.amount = newAmount;
   }
 
-  public static create(props: AccountProps, id?: string) {
+  public static async create(props: AccountProps, id?: string) {
     const accountIsValid = this.isValid(props);
 
     if (!accountIsValid) throw new Error("Invalid account");
@@ -56,7 +69,9 @@ export class Account extends Entity<AccountProps> {
       {
         email: props.email,
         name: props.name,
-        password: props.password,
+        password: id
+          ? props.password
+          : await this.encodePassword(props.password),
         amount: props.amount,
       },
       id

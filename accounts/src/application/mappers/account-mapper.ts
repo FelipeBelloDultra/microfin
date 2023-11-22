@@ -14,8 +14,8 @@ export class AccountMapper {
     };
   }
 
-  public static toDomain(raw: DatabaseAccount) {
-    return Account.create(
+  public static async toDomain(raw: DatabaseAccount) {
+    return await Account.create(
       {
         email: raw.email,
         name: raw.name,

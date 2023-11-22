@@ -23,7 +23,7 @@ export class CreateAccount {
     const finded = await this.accountRepository.findByEmail(email);
     if (finded) throw new Error("Email already used");
 
-    const account = Account.create({
+    const account = await Account.create({
       email,
       name,
       password,
