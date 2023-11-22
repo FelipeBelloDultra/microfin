@@ -1,3 +1,4 @@
+import { Pagination } from "../../domain/entity/pagination";
 import { Transaction } from "../../domain/entity/transaction";
 import { ListTransactionsByAccountIdQuery } from "../query/transactions-query";
 
@@ -7,6 +8,10 @@ export interface TransactionRepository {
   update: (transaction: Transaction) => Promise<void>;
   listByClientId: (
     clientId: string,
-    type?: "sent" | "received"
-  ) => Promise<ListTransactionsByAccountIdQuery>;
+    pagination: {
+      type: "sent" | "received";
+      skip: number;
+      take: number;
+    }
+  ) => Promise<Pagination<ListTransactionsByAccountIdQuery>>;
 }

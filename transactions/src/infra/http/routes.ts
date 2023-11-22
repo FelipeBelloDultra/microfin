@@ -1,7 +1,7 @@
 import { Router as ExpressRouter } from "express";
 
 import { UseCaseFactory } from "../factory/use-case-factory";
-import { ensureAuthenticatedMiddleware } from "./middlewares";
+import { ensureAuthenticatedMiddleware, pagination } from "./middlewares";
 import {
   ListTransactionsByAccountIdController,
   CreateTransactionController,
@@ -23,6 +23,7 @@ export class Router {
     this.router.get(
       "/transactions",
       ensureAuthenticatedMiddleware,
+      pagination,
       listTransactionsByAccountIdController.handle.bind(
         listTransactionsByAccountIdController
       )

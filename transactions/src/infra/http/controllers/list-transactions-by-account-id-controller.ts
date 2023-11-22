@@ -8,16 +8,17 @@ export class ListTransactionsByAccountIdController {
   ) {}
 
   public async handle(req: Request, res: Response) {
-    let { type } = req.query;
-    const { id } = req.user;
+    const { skip, take, type } = req.query;
 
-    if (typeof type !== "string") {
-      type = "sent";
-    }
+    const { id } = req.user;
 
     const transactions = await this.listTransactionsByAccountId.execute({
       accountId: id,
-      type: type === "sent" ? type : "received",
+      pagination: {
+        skip: Number(skip),
+        take: Number(take),
+        type: type === "sent" ? "sent" : "received",
+      },
     });
 
     return res

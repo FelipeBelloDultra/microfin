@@ -1,3 +1,4 @@
+import { Pagination } from "../../domain/entity/pagination";
 import { RepositoryFactory } from "../factory/repository-factory";
 import { CacheProvider } from "../providers/cache-provider";
 import { ListTransactionsByAccountIdQuery } from "../query/transactions-query";
@@ -5,7 +6,11 @@ import { TransactionRepository } from "../repository/transaction-repository";
 
 interface Input {
   accountId: string;
-  type?: "sent" | "received";
+  pagination: {
+    type: "sent" | "received";
+    skip: number;
+    take: number;
+  };
 }
 
 export class ListTransactionsByAccountId {
@@ -19,20 +24,25 @@ export class ListTransactionsByAccountId {
       repositoryFactory.createTransactionRepository();
   }
 
-  public async execute({ accountId, type = "sent" }: Input) {
-    let transactions =
-      await this.cacheProvider.getByKey<ListTransactionsByAccountIdQuery>(
-        `transactions:${accountId}:${type}`
-      );
+  public async execute({ accountId, pagination }: Input) {
+    const { skip, take, type } = pagination;
+
+    let transactions = await this.cacheProvider.getByKey<
+      Pagination<ListTransactionsByAccountIdQuery>
+    >(`transactions:${accountId}:type-${type}:skip-${skip}:take-${take}`);
 
     if (!transactions) {
       transactions = await this.transactionRepository.listByClientId(
         accountId,
-        type
+        {
+          skip,
+          take,
+          type,
+        }
       );
 
       await this.cacheProvider.save(
-        `transactions:${accountId}:${type}`,
+        `transactions:${accountId}:type-${type}:skip-${skip}:take-${take}`,
         transactions
       );
     }
