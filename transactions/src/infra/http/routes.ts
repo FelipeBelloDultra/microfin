@@ -8,6 +8,26 @@ export class Router {
     this.router = ExpressRouter();
   }
 
+  private listTransactionsByAccountId() {
+    const listTransactionsByAccountId =
+      this.useCaseFactory.listTransactionsByAccountId();
+
+    this.router.get("/transactions", async (req, res) => {
+      const { accountId, type } = req.body;
+
+      const transactions = await listTransactionsByAccountId.execute({
+        accountId,
+        type,
+      });
+
+      return res
+        .json({
+          data: transactions,
+        })
+        .status(200);
+    });
+  }
+
   private createTransaction() {
     const createTransaction = this.useCaseFactory.createTransaction();
 
@@ -25,6 +45,7 @@ export class Router {
   }
 
   public all() {
+    this.listTransactionsByAccountId();
     this.createTransaction();
     return this.router;
   }

@@ -1,4 +1,5 @@
 import { MessageProviderFactory } from "./application/factory/message-provider-factory";
+import { RedisCacheProviderAdapter } from "./infra/cache-provider/redis-cache-provider-adapter";
 import { PrismaDatabaseAdapter } from "./infra/database/prisma-database-adapter";
 import { DatabaseRepositoryFactory } from "./infra/factory/database-repository-factory";
 import { UseCaseFactory } from "./infra/factory/use-case-factory";
@@ -8,6 +9,9 @@ import { MessageProviderController } from "./infra/message-provider/message-prov
 import { RabbitmqMessageProviderAdapter } from "./infra/message-provider/rabbitmq-message-provider-adapter";
 
 (async () => {
+  const redisCache = new RedisCacheProviderAdapter();
+  await redisCache.connect();
+
   const rabbitmqMessage = new RabbitmqMessageProviderAdapter();
   await rabbitmqMessage.connect();
 
@@ -20,7 +24,8 @@ import { RabbitmqMessageProviderAdapter } from "./infra/message-provider/rabbitm
 
   const useCaseFactory = new UseCaseFactory(
     repositoryFactory,
-    messageProviderFactory
+    messageProviderFactory,
+    redisCache
   );
 
   new MessageProviderController(rabbitmqMessage, useCaseFactory);

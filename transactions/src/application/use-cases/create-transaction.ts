@@ -1,6 +1,7 @@
 import { Transaction } from "../../domain/entity/transaction";
 import { MessageProviderFactory } from "../factory/message-provider-factory";
 import { RepositoryFactory } from "../factory/repository-factory";
+import { CacheProvider } from "../providers/cache-provider";
 import { TransactionAccountRepository } from "../repository/transaction-account-repository";
 import { TransactionRepository } from "../repository/transaction-repository";
 
@@ -16,7 +17,8 @@ export class CreateTransaction {
 
   constructor(
     repositoryFactory: RepositoryFactory,
-    private readonly messageProviderFactory: MessageProviderFactory
+    private readonly messageProviderFactory: MessageProviderFactory,
+    private readonly cacheProvider: CacheProvider
   ) {
     this.transactionAccountRepository =
       repositoryFactory.createTransactionAccountRepository();
@@ -26,7 +28,7 @@ export class CreateTransaction {
 
   public async execute({ accountFrom, accountTo, value }: Input) {
     if (accountTo === accountFrom) {
-      return await this.transactionRepository.create(
+      await this.transactionRepository.create(
         Transaction.create({
           accountFrom,
           accountTo,
@@ -35,6 +37,7 @@ export class CreateTransaction {
           observation: "Unable to create a transaction for your account",
         })
       );
+      return await this.cacheProvider.invalidate("transactions:*");
     }
 
     const [findedAccountTo, findedAccountFrom] = await Promise.all([
@@ -54,6 +57,7 @@ export class CreateTransaction {
     });
 
     await this.transactionRepository.create(transaction);
+    await this.cacheProvider.invalidate("transactions:*");
 
     await this.messageProviderFactory.emitTransactionProcessCreatedTransactionMessage(
       {

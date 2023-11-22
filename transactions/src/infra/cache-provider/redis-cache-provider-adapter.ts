@@ -28,6 +28,12 @@ export class RedisCacheProviderAdapter implements CacheProvider {
   }
 
   public async invalidate(key: string) {
-    await this.redisClient.del(key);
+    const items = await this.redisClient.scan(0, {
+      MATCH: key,
+    });
+
+    for (const itemKey of items.keys) {
+      await this.redisClient.del(itemKey);
+    }
   }
 }
