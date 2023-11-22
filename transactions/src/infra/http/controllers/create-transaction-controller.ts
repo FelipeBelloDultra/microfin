@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { CreateTransaction } from "../../../application/use-cases/create-transaction";
+import { CreateTransaction } from "../../../application/use-cases";
 
 export class CreateTransactionController {
   constructor(private readonly createTransaction: CreateTransaction) {}

@@ -1,11 +1,14 @@
 import { MessageProviderFactory } from "../../application/factory/message-provider-factory";
 import { RepositoryFactory } from "../../application/factory/repository-factory";
 import { CacheProvider } from "../../application/providers/cache-provider";
-import { CreateTransaction } from "../../application/use-cases/create-transaction";
-import { CreateTransactionAccount } from "../../application/use-cases/create-transaction-account";
-import { ProcessTransaction } from "../../application/use-cases/process-transcation";
-import { UpdateTransactionAccountAmount } from "../../application/use-cases/update-transaction-account-amount";
-import { ListTransactionsByAccountId } from "../../application/use-cases/list-transactions-by-account-id";
+
+import {
+  CreateTransaction,
+  CreateTransactionAccount,
+  ProcessTransaction,
+  UpdateTransactionAccountAmount,
+  ListTransactionsByAccountId,
+} from "../../application/use-cases";
 
 export class UseCaseFactory {
   constructor(

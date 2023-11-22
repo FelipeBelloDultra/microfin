@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { UpdateAccountAmount } from "../../../application/use-cases/update-account-amount";
+import { UpdateAccountAmount } from "../../../application/use-cases";
 
 export class UpdateAccountAmountController {
   constructor(private readonly updateAccountAmount: UpdateAccountAmount) {}

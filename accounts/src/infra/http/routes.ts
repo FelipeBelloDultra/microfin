@@ -1,10 +1,13 @@
 import { Router as ExpressRouter } from "express";
-import { ensureAuthenticatedMiddleware } from "./middlewares/ensure-authenticated";
+
 import { UseCaseFactory } from "../factory/use-case-factory";
-import { CreateAccountController } from "./controllers/create-account-controller";
-import { UpdateAccountAmountController } from "./controllers/update-account-amount-controller";
-import { ShowAuthenticatedController } from "./controllers/show-authenticated-controller";
-import { AuthenticateAccountController } from "./controllers/authenticate-account-controller";
+import { ensureAuthenticatedMiddleware } from "./middlewares";
+import {
+  CreateAccountController,
+  UpdateAccountAmountController,
+  ShowAuthenticatedController,
+  AuthenticateAccountController,
+} from "./controllers";
 
 export class Router {
   private readonly router: ExpressRouter;

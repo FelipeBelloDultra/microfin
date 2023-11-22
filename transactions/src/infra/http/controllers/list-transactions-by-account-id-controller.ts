@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { ListTransactionsByAccountId } from "../../../application/use-cases/list-transactions-by-account-id";
+import { ListTransactionsByAccountId } from "../../../application/use-cases";
 
 export class ListTransactionsByAccountIdController {
   constructor(

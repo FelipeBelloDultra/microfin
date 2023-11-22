@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { ShowAuthenticated } from "../../../application/use-cases/show-authenticated";
+import { ShowAuthenticated } from "../../../application/use-cases";
 
 export class ShowAuthenticatedController {
   constructor(private readonly showAuthenticated: ShowAuthenticated) {}

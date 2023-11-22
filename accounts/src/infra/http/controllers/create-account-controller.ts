@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { CreateAccount } from "../../../application/use-cases/create-account";
+import { CreateAccount } from "../../../application/use-cases";
 
 export class CreateAccountController {
   constructor(private readonly createAccount: CreateAccount) {}

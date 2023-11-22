@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { AuthenticateAccount } from "../../../application/use-cases/authenticate-account";
+import { AuthenticateAccount } from "../../../application/use-cases";
 
 export class AuthenticateAccountController {
   constructor(private readonly authenticateAccount: AuthenticateAccount) {}

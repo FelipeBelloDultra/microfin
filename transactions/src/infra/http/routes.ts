@@ -1,8 +1,11 @@
 import { Router as ExpressRouter } from "express";
-import { ensureAuthenticatedMiddleware } from "./middlewares/ensure-authenticated";
+
 import { UseCaseFactory } from "../factory/use-case-factory";
-import { ListTransactionsByAccountIdController } from "./controllers/list-transactions-by-account-id-controller";
-import { CreateTransactionController } from "./controllers/create-transaction-controller";
+import { ensureAuthenticatedMiddleware } from "./middlewares";
+import {
+  ListTransactionsByAccountIdController,
+  CreateTransactionController,
+} from "./controllers";
 
 export class Router {
   private readonly router: ExpressRouter;

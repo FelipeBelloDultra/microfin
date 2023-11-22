@@ -1,10 +1,13 @@
 import { MessageProviderFactory } from "../../application/factory/message-provider-factory";
 import { RepositoryFactory } from "../../application/factory/repository-factory";
-import { AuthenticateAccount } from "../../application/use-cases/authenticate-account";
-import { CreateAccount } from "../../application/use-cases/create-account";
-import { ShowAuthenticated } from "../../application/use-cases/show-authenticated";
-import { UpdateAccountAmount } from "../../application/use-cases/update-account-amount";
-import { UpdateTransactionAccounts } from "../../application/use-cases/update-transaction-accounts";
+
+import {
+  AuthenticateAccount,
+  CreateAccount,
+  ShowAuthenticated,
+  UpdateAccountAmount,
+  UpdateTransactionAccounts,
+} from "../../application/use-cases";
 
 export class UseCaseFactory {
   constructor(
