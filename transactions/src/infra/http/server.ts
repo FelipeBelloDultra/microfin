@@ -1,4 +1,5 @@
-import express from "express";
+import "express-async-errors";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 
 import { Router } from "./routes";
@@ -16,10 +17,22 @@ export class Server {
   }
 
   public listen() {
+    this.handleErrors();
+
     this.app.listen(env.http.serverPort, () => {
       console.log(
         `[🚀] - transaction server started on port ${env.http.serverPort}\n`
       );
+    });
+  }
+
+  private handleErrors() {
+    this.app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
+      return res.status(400).json({
+        error: {
+          message: err.message,
+        },
+      });
     });
   }
 }

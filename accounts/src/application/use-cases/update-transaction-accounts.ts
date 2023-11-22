@@ -24,8 +24,7 @@ export class UpdateTransactionAccounts {
       this.accountRepository.findById(fromAccount.id),
     ]);
 
-    if (!findedToAccount || !findedFromAccount)
-      throw new Error("Account not found");
+    if (!findedToAccount || !findedFromAccount) return;
 
     findedToAccount.updateAmountValue(toAccount.newValue);
     findedFromAccount.updateAmountValue(fromAccount.newValue);
