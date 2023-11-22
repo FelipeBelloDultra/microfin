@@ -1,5 +1,5 @@
 import { Transaction } from "../../domain/entity/transaction";
-import { ListTransactionsByAccountIdQuery } from "../query/list-transactions-by-account-id-query";
+import { ListTransactionsByAccountIdQuery } from "../query/transactions-query";
 
 export interface TransactionRepository {
   create: (transaction: Transaction) => Promise<void>;

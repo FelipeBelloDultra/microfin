@@ -18,8 +18,20 @@ export class TransactionRepositoryDatabase implements TransactionRepository {
     const transactions = await this.database.client.transaction.findMany({
       where: condition,
       include: {
-        transaction_to_account: true,
-        transaction_from_account: true,
+        transaction_to_account: {
+          select: {
+            email: true,
+            id: true,
+            external_account_id: true,
+          },
+        },
+        transaction_from_account: {
+          select: {
+            email: true,
+            id: true,
+            external_account_id: true,
+          },
+        },
       },
       orderBy: {
         updated_at: "desc",

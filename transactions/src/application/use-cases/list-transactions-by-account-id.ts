@@ -1,6 +1,6 @@
 import { RepositoryFactory } from "../factory/repository-factory";
 import { CacheProvider } from "../providers/cache-provider";
-import { ListTransactionsByAccountIdQuery } from "../query/list-transactions-by-account-id-query";
+import { ListTransactionsByAccountIdQuery } from "../query/transactions-query";
 import { TransactionRepository } from "../repository/transaction-repository";
 
 interface Input {
