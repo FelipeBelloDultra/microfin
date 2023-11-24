@@ -9,6 +9,10 @@ export class UpdateAccountAmountController {
     const { amount } = req.body;
     const { id } = req.user;
 
+    if (!amount || typeof amount !== "number") {
+      throw new Error("amount must be a number");
+    }
+
     await this.updateAccountAmount.execute({
       accountId: id,
       newAccountAmount: amount,

@@ -9,6 +9,10 @@ export class CreateTransactionController {
     const { accountTo, value } = req.body;
     const { id } = req.user;
 
+    if (!accountTo || !value || typeof value !== "number") {
+      throw new Error("invalid data formats");
+    }
+
     await this.createTransaction.execute({
       accountFrom: id,
       accountTo,
