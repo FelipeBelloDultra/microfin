@@ -1,12 +1,20 @@
 version: "3"
 
 services:
+  nginx:
+    image: nginx:1.25.3-alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - microfin-net
+
   transaction-service:
     build: .
     volumes:
       - ./transactions/:/home/node/app
     ports:
-      - 3000:3000
       - 5000:5555
     networks:
       - microfin-net
@@ -20,7 +28,6 @@ services:
     volumes:
       - ./accounts/:/home/node/app
     ports:
-      - 3001:3000
       - 5001:5555
     networks:
       - microfin-net

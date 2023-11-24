@@ -22,7 +22,7 @@ export class Router {
     );
 
     this.router.get(
-      "/account/session/me",
+      "/accounts/session/me",
       ensureAuthenticatedMiddleware,
       showAuthenticatedController.handle.bind(showAuthenticatedController)
     );
@@ -34,7 +34,7 @@ export class Router {
     );
 
     this.router.post(
-      "/account/session",
+      "/accounts/session",
       authenticateAccountController.handle.bind(authenticateAccountController)
     );
   }
@@ -45,7 +45,7 @@ export class Router {
     );
 
     this.router.patch(
-      "/account/amount",
+      "/accounts/amount",
       ensureAuthenticatedMiddleware,
       updateAccountAmountController.handle.bind(updateAccountAmountController)
     );
@@ -57,7 +57,7 @@ export class Router {
     );
 
     this.router.post(
-      "/account",
+      "/accounts",
       createAccountController.handle.bind(createAccountController)
     );
   }

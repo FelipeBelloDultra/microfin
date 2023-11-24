@@ -36,7 +36,7 @@ export class Router {
     );
 
     this.router.post(
-      "/transaction",
+      "/transactions",
       ensureAuthenticatedMiddleware,
       createTransactionController.handle.bind(createTransactionController)
     );
