@@ -1,4 +1,5 @@
 import { Entity } from "../../core/domain/entity";
+import { InvalidAmount } from "./errors/invalid-amount";
 
 interface AccountProps {
   externalAccountId: string;
@@ -22,7 +23,9 @@ export class TransactionAccount extends Entity<AccountProps> {
   }
 
   public updateAmountValue(newAmount: number) {
-    if (newAmount < 0) throw new Error("Amount must be greater than zero");
+    if (newAmount < 0) {
+      throw new InvalidAmount("Amount must be greater than zero.");
+    }
 
     this.props.amount = newAmount;
   }

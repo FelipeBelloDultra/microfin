@@ -1,6 +1,7 @@
 import { MessageProviderFactory } from "../factory/message-provider-factory";
 import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
+import { UserNotFound } from "./errors/user-not-found";
 
 interface Input {
   accountId: string;
@@ -19,7 +20,7 @@ export class UpdateAccountAmount {
 
   public async execute({ accountId, newAccountAmount }: Input) {
     const account = await this.accountRepository.findById(accountId);
-    if (!account) throw new Error("Account not found");
+    if (!account) throw new UserNotFound();
 
     account.updateAmountValue(newAccountAmount);
 

@@ -1,5 +1,7 @@
 import { hash, compare } from "bcryptjs";
 import { Entity } from "../../core/domain/entity";
+import { InvalidAmount } from "./errors/invalid-amount";
+import { InvalidAccount } from "./errors/invalid-account";
 
 interface AccountProps {
   name: string;
@@ -55,7 +57,9 @@ export class Account extends Entity<AccountProps> {
   }
 
   public updateAmountValue(newAmount: number) {
-    if (newAmount < 0) throw new Error("amount must be greater than zero");
+    if (newAmount < 0) {
+      throw new InvalidAmount("Amount must be greater than zero.");
+    }
 
     this.props.amount = newAmount;
   }
@@ -63,7 +67,7 @@ export class Account extends Entity<AccountProps> {
   public static async create(props: AccountProps, id?: string) {
     const accountIsValid = this.isValid(props);
 
-    if (!accountIsValid) throw new Error("Invalid account");
+    if (!accountIsValid) throw new InvalidAccount();
 
     return new Account(
       {

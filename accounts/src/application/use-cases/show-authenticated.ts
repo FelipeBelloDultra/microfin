@@ -1,5 +1,6 @@
 import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
+import { UserNotFound } from "./errors/user-not-found";
 
 interface Input {
   id: string;
@@ -16,7 +17,7 @@ export class ShowAuthenticated {
   public async execute({ id, email }: Input) {
     const account = await this.accountRepository.findById(id);
     if (!account || account.email !== email) {
-      throw new Error("User not found");
+      throw new UserNotFound();
     }
 
     return {

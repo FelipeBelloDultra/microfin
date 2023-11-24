@@ -1,6 +1,7 @@
 import { verify, sign } from "jsonwebtoken";
 
 import { env } from "../../config";
+import { InvalidJwtToken } from "./errors/invalid-jwt-token";
 
 interface Signature {
   id: string;
@@ -44,7 +45,7 @@ export class Jwt {
 
       return decoded;
     } catch (error) {
-      throw new Error("Invalid jwt token");
+      throw new InvalidJwtToken();
     }
   }
 }

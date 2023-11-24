@@ -2,6 +2,7 @@ import { Account } from "../../domain/entity/account";
 import { MessageProviderFactory } from "../factory/message-provider-factory";
 import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
+import { EmailAlreadyUsed } from "./errors/email-already-used";
 
 interface Input {
   name: string;
@@ -21,7 +22,7 @@ export class CreateAccount {
 
   public async execute({ email, name, password }: Input) {
     const finded = await this.accountRepository.findByEmail(email);
-    if (finded) throw new Error("Email already used");
+    if (finded) throw new EmailAlreadyUsed();
 
     const account = await Account.create({
       email,

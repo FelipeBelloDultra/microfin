@@ -1,6 +1,7 @@
 import { Jwt } from "../../domain/entity/jwt";
 import { RepositoryFactory } from "../factory/repository-factory";
 import { AccountRepository } from "../repository/account-repository";
+import { InvalidEmailPassword } from "./errors/invalid-email-password";
 
 interface Input {
   email: string;
@@ -19,14 +20,14 @@ export class AuthenticateAccount {
       email
     );
     if (!findedAccountByEmail) {
-      throw new Error("Invalid email/password combination");
+      throw new InvalidEmailPassword();
     }
 
     const passwordIsEqual = await findedAccountByEmail.comparePasswordHash(
       password
     );
     if (!passwordIsEqual) {
-      throw new Error("Invalid email/password combination");
+      throw new InvalidEmailPassword();
     }
 
     const jwt = Jwt.signIn({

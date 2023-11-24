@@ -3,6 +3,7 @@ import { MessageProviderFactory } from "../factory/message-provider-factory";
 import { RepositoryFactory } from "../factory/repository-factory";
 import { TransactionAccountRepository } from "../repository/transaction-account-repository";
 import { TransactionRepository } from "../repository/transaction-repository";
+import { TransactionNotFound } from "./errors/transaction-not-found";
 
 interface Account {
   id: string;
@@ -41,7 +42,7 @@ export class ProcessTransaction {
     const transaction = await this.transactionRepository.findById(
       transactionId
     );
-    if (!transaction) throw new Error("Could not find transaction");
+    if (!transaction) throw new TransactionNotFound();
 
     if (fromAccount.amount < value) {
       transaction.refuse();

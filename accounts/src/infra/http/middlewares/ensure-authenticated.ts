@@ -1,6 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express";
 
 import { Jwt } from "../../../domain/entity/jwt";
+import { MissingToken } from "./errors/missing-token";
 
 export function ensureAuthenticatedMiddleware(
   req: Request,
@@ -10,7 +11,7 @@ export function ensureAuthenticatedMiddleware(
   const token = req.headers["x-access-token"] as string | null;
 
   if (!token) {
-    throw new Error("Missing token");
+    throw new MissingToken();
   }
 
   const result = Jwt.decodeToken(token);

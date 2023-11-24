@@ -5,6 +5,7 @@ import cors from "cors";
 import { Router } from "./routes";
 
 import { env } from "../../config";
+import { AppError } from "../../core/errors/app-error";
 
 export class Server {
   private readonly app: express.Express;
@@ -28,9 +29,21 @@ export class Server {
 
   private handleErrors() {
     this.app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
-      return res.status(400).json({
+      if (err instanceof AppError) {
+        return res.status(err.statusCode).json({
+          error: {
+            status_code: err.statusCode,
+            message: err.message,
+            errors: err.errors,
+          },
+        });
+      }
+
+      return res.status(500).json({
         error: {
+          status_code: 500,
           message: err.message,
+          errors: {},
         },
       });
     });
