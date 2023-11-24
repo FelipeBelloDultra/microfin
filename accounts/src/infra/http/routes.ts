@@ -1,7 +1,7 @@
 import { Router as ExpressRouter } from "express";
 
 import { UseCaseFactory } from "../factory/use-case-factory";
-import { ensureAuthenticatedMiddleware } from "./middlewares";
+import { ensureAuthenticatedMiddleware, validateRequest } from "./middlewares";
 import {
   CreateAccountController,
   UpdateAccountAmountController,
@@ -35,6 +35,7 @@ export class Router {
 
     this.router.post(
       "/accounts/session",
+      validateRequest.authenticateAccount,
       authenticateAccountController.handle.bind(authenticateAccountController)
     );
   }
@@ -47,6 +48,7 @@ export class Router {
     this.router.patch(
       "/accounts/amount",
       ensureAuthenticatedMiddleware,
+      validateRequest.updateAmount,
       updateAccountAmountController.handle.bind(updateAccountAmountController)
     );
   }
@@ -58,6 +60,7 @@ export class Router {
 
     this.router.post(
       "/accounts",
+      validateRequest.createAccount,
       createAccountController.handle.bind(createAccountController)
     );
   }
