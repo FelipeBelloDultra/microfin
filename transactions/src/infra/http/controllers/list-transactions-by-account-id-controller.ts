@@ -9,7 +9,6 @@ export class ListTransactionsByAccountIdController {
 
   public async handle(req: Request, res: Response) {
     const { skip, take, type } = req.query;
-
     const { id } = req.user;
 
     const transactions = await this.listTransactionsByAccountId.execute({

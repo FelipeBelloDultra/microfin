@@ -61,7 +61,7 @@ const updateAmountValidationSchema = z.object({
       invalid_type_error: "Amount must be a number.",
     })
     .min(1, {
-      message: "Number must be greater than or equal to 1.",
+      message: "Amount must be greater than or equal to 1.",
     }),
 });
 

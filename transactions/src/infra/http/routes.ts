@@ -1,7 +1,11 @@
 import { Router as ExpressRouter } from "express";
 
 import { UseCaseFactory } from "../factory/use-case-factory";
-import { ensureAuthenticatedMiddleware, pagination } from "./middlewares";
+import {
+  ensureAuthenticatedMiddleware,
+  pagination,
+  validateRequest,
+} from "./middlewares";
 import {
   ListTransactionsByAccountIdController,
   CreateTransactionController,
@@ -38,6 +42,7 @@ export class Router {
     this.router.post(
       "/transactions",
       ensureAuthenticatedMiddleware,
+      validateRequest.createTransaction,
       createTransactionController.handle.bind(createTransactionController)
     );
   }
