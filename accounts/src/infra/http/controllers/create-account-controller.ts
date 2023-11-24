@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { CreateAccount } from "../../../application/use-cases";
+import { AppError } from "../../../core/errors/app-error";
 
 export class CreateAccountController {
   constructor(private readonly createAccount: CreateAccount) {}
@@ -9,7 +10,21 @@ export class CreateAccountController {
     const { email, name, password } = req.body;
 
     if (!email || !name || !password) {
-      throw new Error("email, password and name must be provided");
+      throw new AppError({
+        statusCode: 422,
+        message: "Validation failed.",
+        errors: {
+          ...(!email && {
+            email: ["Email is required."],
+          }),
+          ...(!name && {
+            name: ["Name is required."],
+          }),
+          ...(!password && {
+            password: ["Password is required."],
+          }),
+        },
+      });
     }
 
     await this.createAccount.execute({

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { UpdateAccountAmount } from "../../../application/use-cases";
+import { AppError } from "../../../core/errors/app-error";
 
 export class UpdateAccountAmountController {
   constructor(private readonly updateAccountAmount: UpdateAccountAmount) {}
@@ -10,7 +11,15 @@ export class UpdateAccountAmountController {
     const { id } = req.user;
 
     if (!amount || typeof amount !== "number") {
-      throw new Error("amount must be a number");
+      throw new AppError({
+        statusCode: 422,
+        message: "Validation failed.",
+        errors: {
+          ...(!amount && {
+            amount: ["Amount must be a number."],
+          }),
+        },
+      });
     }
 
     await this.updateAccountAmount.execute({

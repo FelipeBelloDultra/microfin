@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { CreateTransaction } from "../../../application/use-cases";
+import { AppError } from "../../../core/errors/app-error";
 
 export class CreateTransactionController {
   constructor(private readonly createTransaction: CreateTransaction) {}
@@ -10,7 +11,18 @@ export class CreateTransactionController {
     const { id } = req.user;
 
     if (!accountTo || !value || typeof value !== "number") {
-      throw new Error("invalid data formats");
+      throw new AppError({
+        statusCode: 422,
+        message: "Validation failed.",
+        errors: {
+          ...(!value && {
+            value: ["Value must be a number."],
+          }),
+          ...(!accountTo && {
+            accountTo: ["accountTo is required."],
+          }),
+        },
+      });
     }
 
     await this.createTransaction.execute({
