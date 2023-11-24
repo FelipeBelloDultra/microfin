@@ -36,6 +36,7 @@ export class Server {
             message: err.message,
             errors: err.errors,
           },
+          data: {},
         });
       }
 
@@ -45,6 +46,7 @@ export class Server {
           message: err.message,
           errors: {},
         },
+        data: {},
       });
     });
   }

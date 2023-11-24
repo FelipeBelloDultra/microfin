@@ -10,6 +10,11 @@ export class AuthenticateAccountController {
 
     const result = await this.authenticateAccount.execute({ email, password });
 
-    return res.json({ data: result }).status(200);
+    return res
+      .json({
+        data: result,
+        error: {},
+      })
+      .status(200);
   }
 }

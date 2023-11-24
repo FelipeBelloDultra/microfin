@@ -23,6 +23,7 @@ export class ListTransactionsByAccountIdController {
     return res
       .json({
         data: transactions,
+        error: {},
       })
       .status(200);
   }

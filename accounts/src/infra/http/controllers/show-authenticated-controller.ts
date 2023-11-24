@@ -10,6 +10,11 @@ export class ShowAuthenticatedController {
 
     const result = await this.showAuthenticated.execute({ email, id });
 
-    return res.json({ data: result }).status(200);
+    return res
+      .json({
+        data: result,
+        error: {},
+      })
+      .status(200);
   }
 }
