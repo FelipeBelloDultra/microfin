@@ -70,6 +70,7 @@ services:
 
 networks:
   microfin-net:
+    name: microfin-net
     driver: bridge
 
 volumes:
